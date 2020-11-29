@@ -11,7 +11,7 @@ import com.optimagrowth.license.model.License;
 
 @Service
 public class LicenseService {
-	
+
 	@Autowired
 	MessageSource messages;
 
@@ -27,11 +27,13 @@ public class LicenseService {
 		return license;
 	}
 
-	public String createLicense(License license, String organizationId, Locale locale) {
+	public String createLicense(License license, String organizationId,
+			Locale locale) {
 		String responseMessage = null;
 		if (!ObjectUtils.isEmpty(license)) {
 			license.setOrganizationId(organizationId);
-			responseMessage = String.format(messages.getMessage("license.create.message",null, locale),
+			responseMessage = String.format(messages
+					.getMessage("license.create.message", null, locale),
 					license.toString());
 		}
 
@@ -43,7 +45,7 @@ public class LicenseService {
 		if (!ObjectUtils.isEmpty(license)) {
 			license.setOrganizationId(organizationId);
 			responseMessage = String.format(
-					"This is the put and the object is: %s",
+					messages.getMessage("license.update.message", null, null),
 					license.toString());
 		}
 
@@ -53,7 +55,7 @@ public class LicenseService {
 	public String deleteLicense(String licenseId, String organizationId) {
 		String responseMessage = null;
 		responseMessage = String.format(
-				"Deleting license with id %s for the organization %s",
+				messages.getMessage("license.delete.message", null, null),
 				licenseId, organizationId);
 		return responseMessage;
 
