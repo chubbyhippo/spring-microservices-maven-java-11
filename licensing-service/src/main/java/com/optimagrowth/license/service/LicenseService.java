@@ -4,7 +4,6 @@ import java.util.Random;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
 import com.optimagrowth.license.model.License;
 
 @Service
