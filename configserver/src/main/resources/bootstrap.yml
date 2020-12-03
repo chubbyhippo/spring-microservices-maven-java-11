@@ -2,17 +2,18 @@ spring:
   application:
     name: config-server
   profiles:
-    active:
-    - native
+    active: native 
   cloud:
     config:
       server:
         native:
           search-locations: classpath:/config
-        git:
-          uri: https://github.com/chubbyhippo/spring-microservices-maven-java-11.git
-          search-paths:          - config
+#        git:
+#          uri: https://github.com/chubbyhippo/config
+
 server:  port: 8071
+
+
 
 #Enable all Spring Boot Actuator endpoints.
 management:
