@@ -2,12 +2,15 @@ spring:
   application:
     name: config-server
   profiles:
-    active: native
+    active: native, git
   cloud:
     config:
       server:
         native:
           search-locations: classpath:/config
+        git:
+          uri: https://github.com/chubbyhippo/spring-microservices-maven-java-11.git
+          search-paths:          - config
 server:  port: 8071
   
 
