@@ -33,7 +33,7 @@ services:
         aliases:
         - configserver
   licensingservice:
-    image: ostock/licensing-service:0.0.2-SNAPSHOT
+    image: ostock/licensing-service:0.0.1-SNAPSHOT
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_CLOUD_CONFIG_URI: http://configserver:8071
