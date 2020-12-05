@@ -2,7 +2,7 @@ spring:
   application:
     name: config-server
   profiles:
-    active: navive
+    active: native
   cloud:
     config:
       server:
