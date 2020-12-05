@@ -8,11 +8,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.optimagrowth.license.model.Organization;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Component
 public class OrganizationRestTemplateClient {
     @Autowired
     RestTemplate restTemplate;
-
+    
+    @CircuitBreaker(name = "organizationService") 
     public Organization getOrganization(String organizationId){
         ResponseEntity<Organization> restExchange =
                 restTemplate.exchange(
