@@ -22,6 +22,7 @@ import com.optimagrowth.license.utils.UserContextHolder;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead.Type;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -45,7 +46,6 @@ public class LicenseService {
 
 	@Autowired
 	OrganizationDiscoveryClient organizationDiscoveryClient;
-	
 
 	public License getLicense(String licenseId, String organizationId,
 			String clientType) {
@@ -138,27 +138,30 @@ public class LicenseService {
 			log.error(e.getMessage());
 		}
 	}
-	
-	 
+
 	@SuppressWarnings("unused")
-	private List<License> buildFallbackLicenseList(String organizationId, Throwable t){
-	   List<License> fallbackList = new ArrayList<>();
-	   License license = new License();
-	   license.setLicenseId("0000000-00-00000");
-	   license.setOrganizationId(organizationId);
-	   license.setProductName("Sorry no licensing information currently available");
-	   fallbackList.add(license);
-	   return fallbackList;
+	private List<License> buildFallbackLicenseList(String organizationId,
+			Throwable t) {
+		List<License> fallbackList = new ArrayList<>();
+		License license = new License();
+		license.setLicenseId("0000000-00-00000");
+		license.setOrganizationId(organizationId);
+		license.setProductName(
+				"Sorry no licensing information currently available");
+		fallbackList.add(license);
+		return fallbackList;
 	}
 
 	@CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+	@Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
 //	use semaphore
 //	@Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList")
 	@Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList", type = Type.THREADPOOL)
-	public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
-		
+	public List<License> getLicensesByOrganization(String organizationId)
+			throws TimeoutException {
+
 		log.debug("getLicensesByOrganization Correlation id: {}",
-                UserContextHolder.getContext().getCorrelationId());
+				UserContextHolder.getContext().getCorrelationId());
 		randomlyRunLong();
 		return licenseRepository.findByOrganizationId(organizationId);
 	}
