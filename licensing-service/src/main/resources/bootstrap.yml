@@ -19,8 +19,8 @@ resilience4j.circuitbreaker:
   instances:
     licenseService:
       registerHealthIndicator: true
-      ringBufferSizeInClosedState: 2
-      ringBufferSizeInHalfOpenState: 1
+      ringBufferSizeInClosedState: 4
+      ringBufferSizeInHalfOpenState: 2
       waitDurationInOpenState: 10s
       failureRateThreshold: 50
       recordExceptions:
