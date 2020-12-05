@@ -2,7 +2,7 @@ server:
   port: 8070
 eureka:
   instance:
-    hostname: localhost
+    hostname: eurekaserver
   client:
     registerWithEureka: false
     fetchRegistry: false
@@ -10,3 +10,9 @@ eureka:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   server:
     waitTimeInMsWhenSyncEmpty: 5
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
