@@ -2,12 +2,12 @@ spring:
   application:
     name: config-server
   profiles:
-    active: native
+    active: navive
   cloud:
     config:
       server:
-#        native:
-#          search-locations: classpath:/config
+        native:
+          search-locations: classpath:/config
         git:
           uri: https://github.com/chubbyhippo/spring-microservices-maven-java-11
           search-paths:          - config
@@ -17,7 +17,6 @@ spring:
 server:  port: 8071
 
 encrypt:  key: secret-key
-
 
 #Enable all Spring Boot Actuator endpoints.
 management:

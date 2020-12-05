@@ -37,6 +37,8 @@ services:
     image: ostock/eurekaserver:0.0.1-SNAPSHOT
     ports:
     - 8070:8070
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://configserver:8071
     depends_on:
       database:
         condition: service_healthy
