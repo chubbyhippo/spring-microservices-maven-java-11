@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -99,6 +100,7 @@ public class LicenseService {
 		return responseMessage;
 
 	}
+
 
 	public List<License> getLicensesByOrganization(String organizationId) {
 		return licenseRepository.findByOrganizationId(organizationId);
