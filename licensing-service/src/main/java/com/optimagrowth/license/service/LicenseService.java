@@ -101,7 +101,6 @@ public class LicenseService {
 
 	}
 
-
 	public List<License> getLicensesByOrganization(String organizationId) {
 		return licenseRepository.findByOrganizationId(organizationId);
 	}
