@@ -1,7 +1,9 @@
 package com.optimagrowth.license.service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
@@ -17,8 +19,10 @@ import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class LicenseService {
 
 	@Autowired
@@ -38,6 +42,7 @@ public class LicenseService {
 
 	@Autowired
 	OrganizationDiscoveryClient organizationDiscoveryClient;
+	
 
 	public License getLicense(String licenseId, String organizationId,
 			String clientType) {
@@ -113,6 +118,22 @@ public class LicenseService {
 				licenseId);
 		return responseMessage;
 
+	}
+
+	private void randomlyRunLong() throws TimeoutException {
+		Random rand = new Random();
+		int randomNum = rand.nextInt((3 - 1) + 1) + 1;
+		if (randomNum == 3)
+			sleep();
+	}
+
+	private void sleep() throws TimeoutException {
+		try {
+			Thread.sleep(5000);
+			throw new java.util.concurrent.TimeoutException();
+		} catch (InterruptedException e) {
+			log.error(e.getMessage());
+		}
 	}
 
 	@CircuitBreaker(name = "licenseService")
