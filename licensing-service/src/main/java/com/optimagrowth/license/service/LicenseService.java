@@ -154,8 +154,7 @@ public class LicenseService {
 
 	@CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
 	@Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
-//	use semaphore
-//	@Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList")
+//	@Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList") semaphore
 	@Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList", type = Type.THREADPOOL)
 	public List<License> getLicensesByOrganization(String organizationId)
 			throws TimeoutException {
