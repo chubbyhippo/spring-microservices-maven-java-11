@@ -16,6 +16,8 @@ import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Service
 public class LicenseService {
 
@@ -37,13 +39,18 @@ public class LicenseService {
 	@Autowired
 	OrganizationDiscoveryClient organizationDiscoveryClient;
 
-	public License getLicense(String licenseId, String organizationId, String clientType){
-		License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
+	public License getLicense(String licenseId, String organizationId,
+			String clientType) {
+		License license = licenseRepository
+				.findByOrganizationIdAndLicenseId(organizationId, licenseId);
 		if (null == license) {
-			throw new IllegalArgumentException(String.format(messages.getMessage("license.search.error.message", null, null),licenseId, organizationId));	
+			throw new IllegalArgumentException(String.format(messages
+					.getMessage("license.search.error.message", null, null),
+					licenseId, organizationId));
 		}
 
-		Organization organization = retrieveOrganizationInfo(organizationId, clientType);
+		Organization organization = retrieveOrganizationInfo(organizationId,
+				clientType);
 		if (null != organization) {
 			license.setOrganizationName(organization.getName());
 			license.setContactName(organization.getContactName());
@@ -54,53 +61,61 @@ public class LicenseService {
 		return license.withComment(config.getExampleProperty());
 	}
 
-	private Organization retrieveOrganizationInfo(String organizationId, String clientType) {
+	private Organization retrieveOrganizationInfo(String organizationId,
+			String clientType) {
 		Organization organization = null;
 
 		switch (clientType) {
 		case "feign":
 			System.out.println("I am using the feign client");
-			organization = organizationFeignClient.getOrganization(organizationId);
+			organization = organizationFeignClient
+					.getOrganization(organizationId);
 			break;
 		case "rest":
 			System.out.println("I am using the rest client");
-			organization = organizationRestClient.getOrganization(organizationId);
+			organization = organizationRestClient
+					.getOrganization(organizationId);
 			break;
 		case "discovery":
 			System.out.println("I am using the discovery client");
-			organization = organizationDiscoveryClient.getOrganization(organizationId);
+			organization = organizationDiscoveryClient
+					.getOrganization(organizationId);
 			break;
 		default:
-			organization = organizationRestClient.getOrganization(organizationId);
+			organization = organizationRestClient
+					.getOrganization(organizationId);
 			break;
 		}
 
 		return organization;
 	}
 
-	public License createLicense(License license){
+	public License createLicense(License license) {
 		license.setLicenseId(UUID.randomUUID().toString());
 		licenseRepository.save(license);
 
 		return license.withComment(config.getExampleProperty());
 	}
 
-	public License updateLicense(License license){
+	public License updateLicense(License license) {
 		licenseRepository.save(license);
 
 		return license.withComment(config.getExampleProperty());
 	}
 
-	public String deleteLicense(String licenseId){
+	public String deleteLicense(String licenseId) {
 		String responseMessage = null;
 		License license = new License();
 		license.setLicenseId(licenseId);
 		licenseRepository.delete(license);
-		responseMessage = String.format(messages.getMessage("license.delete.message", null, null),licenseId);
+		responseMessage = String.format(
+				messages.getMessage("license.delete.message", null, null),
+				licenseId);
 		return responseMessage;
 
 	}
 
+	@CircuitBreaker(name = "licenseService")
 	public List<License> getLicensesByOrganization(String organizationId) {
 		return licenseRepository.findByOrganizationId(organizationId);
 	}
