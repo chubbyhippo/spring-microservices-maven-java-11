@@ -83,7 +83,13 @@
 					"name": "post-license",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"licenseId\": \"0123413412433\",\n    \"description\": \"Software product\",\n    \"organizationId\": \"optimaGrowth\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"full\"\n}",
@@ -156,7 +162,13 @@
 					"name": "put-license",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"licenseId\": \"0123413412433\",\n    \"description\": \"Software product\",\n    \"organizationId\": \"optimaGrowth\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"full\"\n}",
@@ -287,6 +299,122 @@
 							"port": "8071",
 							"path": [
 								"decrypt"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "eureka",
+			"item": [
+				{
+					"name": "apps",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8070/eureka/apps/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8070",
+							"path": [
+								"eureka",
+								"apps",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "licensing-service",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8070/eureka/apps/licensing-service",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8070",
+							"path": [
+								"eureka",
+								"apps",
+								"licensing-service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "organization-service",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8070/eureka/apps/organization-service",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8070",
+							"path": [
+								"eureka",
+								"apps",
+								"organization-service"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "resilience4j",
+			"item": [
+				{
+					"name": "randomly run long",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/v1/organization/e6a625cc-718b-48c2-ac76-1dfdff9a531e/license/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"organization",
+								"e6a625cc-718b-48c2-ac76-1dfdff9a531e",
+								"license",
+								""
 							]
 						}
 					},
