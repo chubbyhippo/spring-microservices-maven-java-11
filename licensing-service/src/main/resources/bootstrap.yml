@@ -7,12 +7,20 @@ spring:
         config:
             uri: http://localhost:8071
 
+
+#Enable all Spring Boot Actuator endpoints.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 resilience4j.circuitbreaker:
   instances:
     licenseService:
       registerHealthIndicator: true
-      ringBufferSizeInClosedState: 5
-      ringBufferSizeInHalfOpenState: 3
+      ringBufferSizeInClosedState: 2
+      ringBufferSizeInHalfOpenState: 1
       waitDurationInOpenState: 10s
       failureRateThreshold: 50
       recordExceptions:
