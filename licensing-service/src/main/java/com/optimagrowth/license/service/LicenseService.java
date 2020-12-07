@@ -22,6 +22,7 @@ import com.optimagrowth.license.utils.UserContextHolder;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead.Type;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 
@@ -153,6 +154,7 @@ public class LicenseService {
 	}
 
 	@CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+	@RateLimiter(name = "licenseService", fallbackMethod = "buldFallbackLicenseList")
 	@Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
 //	@Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList") semaphore
 	@Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList", type = Type.THREADPOOL)
