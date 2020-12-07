@@ -10,8 +10,11 @@ eureka:
       defaultZone: http://localhost:8070/eureka/
 spring:
   cloud:
-    loadbalancer.ribbon.enabled: false
     gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#          lower-case-service-id: true
       routes:
       - id: organization-service
         uri: lb://organization-service
