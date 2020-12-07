@@ -16,26 +16,29 @@ import reactor.core.publisher.Mono;
 @Component
 public class TrackingFilter implements GlobalFilter {
 
-	private static final Logger logger = LoggerFactory.getLogger(TrackingFilter.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(TrackingFilter.class);
 
 	@Autowired
 	FilterUtils filterUtils;
 
 	@Override
-	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+	public Mono<Void> filter(ServerWebExchange exchange,
+			GatewayFilterChain chain) {
 		HttpHeaders requestHeaders = exchange.getRequest().getHeaders();
 		if (isCorrelationIdPresent(requestHeaders)) {
-			logger.debug("tmx-correlation-id found in tracking filter: {}. ", 
+			logger.debug("tmx-correlation-id found in tracking filter: {}. ",
 					filterUtils.getCorrelationId(requestHeaders));
 		} else {
 			String correlationID = generateCorrelationId();
 			exchange = filterUtils.setCorrelationId(exchange, correlationID);
-			logger.debug("tmx-correlation-id generated in tracking filter: {}.", correlationID);
+			logger.debug(
+					"tmx-correlation-id generated in tracking filter: {}.",
+					correlationID);
 		}
-		
+
 		return chain.filter(exchange);
 	}
-
 
 	private boolean isCorrelationIdPresent(HttpHeaders requestHeaders) {
 		if (filterUtils.getCorrelationId(requestHeaders) != null) {
