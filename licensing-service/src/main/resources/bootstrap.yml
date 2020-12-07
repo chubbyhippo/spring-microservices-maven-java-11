@@ -7,6 +7,10 @@ spring:
         config:
             uri: http://localhost:8071
 
+logging:
+  level:
+    '[org.springframework.web]': warn
+    '[com.optimagrowth]': debug
 
 #Enable all Spring Boot Actuator endpoints.
 management:

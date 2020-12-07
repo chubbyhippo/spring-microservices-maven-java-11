@@ -14,10 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class UserContextFilter implements Filter {
-	private static final Logger logger = LoggerFactory
-			.getLogger(UserContextFilter.class);
 
 	@Override
 	public void doFilter(ServletRequest servletRequest,
@@ -35,7 +36,7 @@ public class UserContextFilter implements Filter {
 		UserContextHolder.getContext().setOrganizationId(
 				httpServletRequest.getHeader(UserContext.ORGANIZATION_ID));
 
-		logger.debug("UserContextFilter Correlation id: {}",
+		log.debug("UserContextFilter Correlation id: {}",
 				UserContextHolder.getContext().getCorrelationId());
 
 		filterChain.doFilter(httpServletRequest, servletResponse);
