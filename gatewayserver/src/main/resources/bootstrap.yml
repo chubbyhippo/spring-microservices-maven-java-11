@@ -4,4 +4,9 @@ spring:
     cloud:
         config:
             uri: http://localhost:8071
+logging:
+  level:
+    '[com.netflix]': warn
+    '[org.springframework.web]': warn
+    '[com.optimagrowth]': debug
             
