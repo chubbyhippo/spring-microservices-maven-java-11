@@ -66,6 +66,22 @@ services:
       backend:
         aliases:
         - gateway
+  authenticationservice:
+    image: ostock/authentication-service:0.0.1-SNAPSHOT
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CLOUD_CONFIG_URI: http://configserver:8071
+    depends_on:
+      database:
+        condition: service_healthy
+      configserver:
+        condition: service_started
+    ports:
+    - 8082:8082
+    networks:
+      backend:
+        aliases:
+        - authenticationservice
   licensingservice:
     image: ostock/licensing-service:0.0.1-SNAPSHOT
     environment:
