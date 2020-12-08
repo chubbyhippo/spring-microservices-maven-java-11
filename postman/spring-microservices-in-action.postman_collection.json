@@ -201,13 +201,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/health",
+							"raw": "http://localhost:8080/actuator/health",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"actuator",
 								"health"
 							]
 						}
@@ -235,6 +236,35 @@
 							"path": [
 								"actuator",
 								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-licenses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "tmx-correlation-id",
+								"value": "TEST-CORRELATION-ID",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/v1/organization/d898a142-de44-466c-8c88-9ceb2c2429d3/license/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"organization",
+								"d898a142-de44-466c-8c88-9ceb2c2429d3",
+								"license",
+								""
 							]
 						}
 					},
@@ -415,6 +445,76 @@
 								"e6a625cc-718b-48c2-ac76-1dfdff9a531e",
 								"license",
 								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "gatewayserver",
+			"item": [
+				{
+					"name": "get-gateway-routes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8072/actuator/gateway/routes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8072",
+							"path": [
+								"actuator",
+								"gateway",
+								"routes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-organization",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8072/organization/v1/organization/e6a625cc-718b-48c2-ac76-1dfdff9a531e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8072",
+							"path": [
+								"organization",
+								"v1",
+								"organization",
+								"e6a625cc-718b-48c2-ac76-1dfdff9a531e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8072/actuator/gateway/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8072",
+							"path": [
+								"actuator",
+								"gateway",
+								"refresh"
 							]
 						}
 					},
