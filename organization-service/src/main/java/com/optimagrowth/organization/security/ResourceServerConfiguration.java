@@ -12,7 +12,7 @@ public class ResourceServerConfiguration
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers(HttpMethod.DELETE, "v1/organization/**")
+				.antMatchers(HttpMethod.DELETE, "/v1/organization/**")
 				.hasRole("ADMIN").anyRequest().authenticated();
 	}
 
