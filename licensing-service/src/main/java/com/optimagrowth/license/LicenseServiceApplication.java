@@ -15,6 +15,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
@@ -41,6 +44,7 @@ public class LicenseServiceApplication {
 		localeResolver.setDefaultLocale(Locale.US);
 		return localeResolver;
 	}
+
 	@Bean
 	public ResourceBundleMessageSource messageSource() {
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -49,6 +53,12 @@ public class LicenseServiceApplication {
 		return messageSource;
 	}
 
+	@Bean
+	public OAuth2RestTemplate oauth2RestTemplate(
+			OAuth2ClientContext oauth2ClientContext,
+			OAuth2ProtectedResourceDetails details) {
+		return new OAuth2RestTemplate(details, oauth2ClientContext);
+	}
 
 //	@LoadBalanced
 //	@Bean
