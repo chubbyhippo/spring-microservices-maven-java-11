@@ -10,6 +10,9 @@ eureka:
       defaultZone: http://localhost:8070/eureka/
 spring:
   cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
     gateway:
 #      discovery:
 #        locator:
