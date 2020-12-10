@@ -4,6 +4,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;
@@ -34,8 +36,12 @@ public class TrackingFilter implements GlobalFilter {
 			logger.debug("tmx-correlation-id generated in tracking filter: {}.", correlationID);
 		}
 		
-		System.out.println("The authentication name from the token is : " + getAuthenticationName(requestHeaders));
-		
+		try {
+			System.out.println("The authentication name from the token is : " + getAuthenticationName(requestHeaders));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		return chain.filter(exchange);
@@ -54,7 +60,7 @@ public class TrackingFilter implements GlobalFilter {
 		return java.util.UUID.randomUUID().toString();
 	}
 
-	private String getAuthenticationName(HttpHeaders requestHeaders){
+	private String getAuthenticationName(HttpHeaders requestHeaders) throws JSONException{
 		String authenticationName = "";
 		if (filterUtils.getAuthToken(requestHeaders)!=null){
 			String authToken = filterUtils.getAuthToken(requestHeaders).replace("Bearer ","");
@@ -65,7 +71,7 @@ public class TrackingFilter implements GlobalFilter {
 	}
 
 
-	private JSONObject decodeJWT(String JWTToken) {
+	private JSONObject decodeJWT(String JWTToken) throws JSONException {
 		String[] split_string = JWTToken.split("\\.");
 		String base64EncodedBody = split_string[1];
 		Base64 base64Url = new Base64(true);
