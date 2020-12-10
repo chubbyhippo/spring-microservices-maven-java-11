@@ -19,34 +19,37 @@ import reactor.core.publisher.Mono;
 @Component
 public class TrackingFilter implements GlobalFilter {
 
-	private static final Logger logger = LoggerFactory.getLogger(TrackingFilter.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(TrackingFilter.class);
 
 	@Autowired
 	FilterUtils filterUtils;
 
 	@Override
-	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+	public Mono<Void> filter(ServerWebExchange exchange,
+			GatewayFilterChain chain) {
 		HttpHeaders requestHeaders = exchange.getRequest().getHeaders();
 		if (isCorrelationIdPresent(requestHeaders)) {
-			logger.debug("tmx-correlation-id found in tracking filter: {}. ", 
+			logger.debug("tmx-correlation-id found in tracking filter: {}. ",
 					filterUtils.getCorrelationId(requestHeaders));
 		} else {
 			String correlationID = generateCorrelationId();
 			exchange = filterUtils.setCorrelationId(exchange, correlationID);
-			logger.debug("tmx-correlation-id generated in tracking filter: {}.", correlationID);
+			logger.debug(
+					"tmx-correlation-id generated in tracking filter: {}.",
+					correlationID);
 		}
-		
+
 		try {
-			System.out.println("The authentication name from the token is : " + getAuthenticationName(requestHeaders));
-		} catch (JSONException e) {
+			logger.debug("The authentication name from the token is : {}",
+					getAuthenticationName(requestHeaders));
+		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
-		
-		
+
 		return chain.filter(exchange);
 	}
-
 
 	private boolean isCorrelationIdPresent(HttpHeaders requestHeaders) {
 		if (filterUtils.getCorrelationId(requestHeaders) != null) {
@@ -60,16 +63,17 @@ public class TrackingFilter implements GlobalFilter {
 		return java.util.UUID.randomUUID().toString();
 	}
 
-	private String getAuthenticationName(HttpHeaders requestHeaders) throws JSONException{
+	private String getAuthenticationName(HttpHeaders requestHeaders)
+			throws JSONException {
 		String authenticationName = "";
-		if (filterUtils.getAuthToken(requestHeaders)!=null){
-			String authToken = filterUtils.getAuthToken(requestHeaders).replace("Bearer ","");
-	        JSONObject jsonObj = decodeJWT(authToken);
-	        authenticationName = jsonObj.getString("authentication_name");
+		if (filterUtils.getAuthToken(requestHeaders) != null) {
+			String authToken = filterUtils.getAuthToken(requestHeaders)
+					.replace("Bearer ", "");
+			JSONObject jsonObj = decodeJWT(authToken);
+			authenticationName = jsonObj.getString("authentication_name");
 		}
 		return authenticationName;
 	}
-
 
 	private JSONObject decodeJWT(String JWTToken) throws JSONException {
 		String[] split_string = JWTToken.split("\\.");

@@ -10,6 +10,9 @@ eureka:
       defaultZone: http://eurekaserver:8070/eureka/
 spring:
   cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
     gateway:
       routes:
       - id: organization-service
@@ -25,7 +28,7 @@ spring:
         - Path=/license/**
         filters:
         - RewritePath=/license/(?<path>.*), /$\{path}
-        - RemoveRequestHeader= Cookie,Set-Cooki
+        - RemoveRequestHeader= Cookie,Set-Cookie
 management:
   endpoints:
     web:
