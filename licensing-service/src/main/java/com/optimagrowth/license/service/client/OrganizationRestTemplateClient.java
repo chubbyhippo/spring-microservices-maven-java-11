@@ -19,8 +19,9 @@ public class OrganizationRestTemplateClient {
 
 	public Organization getOrganization(String organizationId) {
 		ResponseEntity<Organization> restExchange = restTemplate.exchange(
-				env.getProperty("gateway.url"), HttpMethod.GET, null,
-				Organization.class, organizationId);
+				env.getProperty("gateway.url")
+						+ "organization/v1/organization/{organizationId}",
+				HttpMethod.GET, null, Organization.class, organizationId);
 
 		return restExchange.getBody();
 	}
