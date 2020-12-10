@@ -1,5 +1,7 @@
 package com.optimagrowth.license;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.boot.SpringApplication;
@@ -10,14 +12,18 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import com.optimagrowth.license.utils.UserContextInterceptor;
 
 @SpringBootApplication
 @RefreshScope
@@ -46,28 +52,21 @@ public class LicenseServiceApplication {
 		return messageSource;
 	}
 
+	@Primary
 	@Bean
-	public OAuth2RestTemplate oauth2RestTemplate(
-			OAuth2ClientContext oauth2ClientContext,
-			OAuth2ProtectedResourceDetails details) {
-		return new OAuth2RestTemplate(details, oauth2ClientContext);
-	}
+	public RestTemplate getCustomRestTemplate() {
+		RestTemplate template = new RestTemplate();
+		List<ClientHttpRequestInterceptor> interceptors = template
+				.getInterceptors();
+		if (interceptors == null) {
+			template.setInterceptors(
+					Collections.singletonList(new UserContextInterceptor()));
+		} else {
+			interceptors.add(new UserContextInterceptor());
+			template.setInterceptors(interceptors);
+		}
 
-//	@LoadBalanced
-//	@Bean
-//	public RestTemplate getRestTemplate() {
-//		RestTemplate template = new RestTemplate();
-//		List<ClientHttpRequestInterceptor> interceptors = template
-//				.getInterceptors();
-//		if (interceptors == null) {
-//			template.setInterceptors(
-//					Collections.singletonList(new UserContextInterceptor()));
-//		} else {
-//			interceptors.add(new UserContextInterceptor());
-//			template.setInterceptors(interceptors);
-//		}
-//
-//		return template;
-//	}
+		return template;
+	}
 
 }
