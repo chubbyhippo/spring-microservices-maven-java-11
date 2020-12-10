@@ -485,7 +485,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{admin_access_token}}",
+									"value": "{{admin-access-token}}",
 									"type": "string"
 								}
 							]
@@ -504,6 +504,72 @@
 								"v1",
 								"organization",
 								"e6a625cc-718b-48c2-ac76-1dfdff9a531e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-organization-user-access",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user-access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8072/organization/v1/organization/e6a625cc-718b-48c2-ac76-1dfdff9a531e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8072",
+							"path": [
+								"organization",
+								"v1",
+								"organization",
+								"e6a625cc-718b-48c2-ac76-1dfdff9a531e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-license-admin-access",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin-access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8072/license/v1/organization/d898a142-de44-466c-8c88-9ceb2c2429d3/license/f2a9c9d4-d2c0-44fa-97fe-724d77173c62",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8072",
+							"path": [
+								"license",
+								"v1",
+								"organization",
+								"d898a142-de44-466c-8c88-9ceb2c2429d3",
+								"license",
+								"f2a9c9d4-d2c0-44fa-97fe-724d77173c62"
 							]
 						}
 					},
@@ -544,38 +610,6 @@
 							]
 						},
 						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8072/organization/v1/organization/e6a625cc-718b-48c2-ac76-1dfdff9a531e",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8072",
-							"path": [
-								"organization",
-								"v1",
-								"organization",
-								"e6a625cc-718b-48c2-ac76-1dfdff9a531e"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get-organization-user-access",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user-access-token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:8072/organization/v1/organization/e6a625cc-718b-48c2-ac76-1dfdff9a531e",
