@@ -576,6 +576,47 @@
 					"response": []
 				},
 				{
+					"name": "post-organization",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin-access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Hippo\",\n    \"contactName\": \"Chubby Hippo\",\n    \"contactEmail\": \"chubbyhippo@gmail.com\",\n    \"contactPhone\": \"555555555555\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8072/organization/v1/organization/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8072",
+							"path": [
+								"organization",
+								"v1",
+								"organization",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "refresh",
 					"request": {
 						"method": "POST",
