@@ -11,15 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.optimagrowth.organization.utils.UserContextHolder;
 import com.optimagrowth.organization.model.Organization;
 import com.optimagrowth.organization.service.OrganizationService;
 
-import lombok.extern.slf4j.Slf4j;
-
 @RestController
 @RequestMapping(value = "v1/organization")
-@Slf4j
 public class OrganizationController {
 	@Autowired
 	private OrganizationService service;
@@ -27,8 +23,6 @@ public class OrganizationController {
 	@RequestMapping(value = "/{organizationId}", method = RequestMethod.GET)
 	public ResponseEntity<Organization> getOrganization(
 			@PathVariable("organizationId") String organizationId) {
-		log.debug("OrganizationController Correlation id: {}",
-				UserContextHolder.getContext().getCorrelationId());
 		return ResponseEntity.ok(service.findById(organizationId));
 	}
 
@@ -46,9 +40,10 @@ public class OrganizationController {
 
 	@RequestMapping(value = "/{organizationId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteOrganization(@PathVariable("id") String id,
-			@RequestBody Organization organization) {
-		service.delete(organization);
+	public void deleteOrganization(
+			@PathVariable("organizationId") String organizationId) {
+		service.delete(organizationId);
+
 	}
 
 }
