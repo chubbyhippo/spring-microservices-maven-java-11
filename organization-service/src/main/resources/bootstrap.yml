@@ -11,3 +11,4 @@ logging:
   level:
     '[org.springframework.web]': warn
     '[com.optimagrowth]': debug
+    '[com.netflix]': warn
