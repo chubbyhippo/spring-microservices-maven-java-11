@@ -17,6 +17,7 @@ logging:
   level:
     '[org.springframework.web]': warn
     '[com.optimagrowth]': debug
+    '[com.netflix]': warn
 
 #Enable all Spring Boot Actuator endpoints.
 management:
