@@ -11,31 +11,43 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
+import static com.optimagrowth.organization.utils.UserContext.getCorrelationId;
+import static com.optimagrowth.organization.utils.UserContext.setAuthToken;
+import static com.optimagrowth.organization.utils.UserContext.setCorrelationId;
+import static com.optimagrowth.organization.utils.UserContext.setOrgId;
+import static com.optimagrowth.organization.utils.UserContext.setUserId;
+
 import java.io.IOException;
 
 @Component
 public class UserContextFilter implements Filter {
-    private static final Logger logger = LoggerFactory.getLogger(UserContextFilter.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserContextFilter.class);
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
+	@Override
+	public void doFilter(ServletRequest servletRequest,
+			ServletResponse servletResponse, FilterChain filterChain)
+			throws IOException, ServletException {
 
+		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+		setCorrelationId(
+				httpServletRequest.getHeader(UserContext.CORRELATION_ID));
+		setUserId(httpServletRequest.getHeader(UserContext.USER_ID));
+		setAuthToken(httpServletRequest.getHeader(UserContext.AUTH_TOKEN));
+		setOrgId(httpServletRequest.getHeader(UserContext.ORG_ID));
 
-        UserContextHolder.getContext().setCorrelationId(  httpServletRequest.getHeader(UserContext.CORRELATION_ID) );
-        UserContextHolder.getContext().setUserId( httpServletRequest.getHeader(UserContext.USER_ID) );
-        UserContextHolder.getContext().setAuthToken( httpServletRequest.getHeader(UserContext.AUTH_TOKEN) );
-        UserContextHolder.getContext().setOrgId( httpServletRequest.getHeader(UserContext.ORG_ID) );
+		logger.debug("Organization Service Incoming Correlation id: {}",
+				getCorrelationId());
+		filterChain.doFilter(httpServletRequest, servletResponse);
+	}
 
-        logger.debug("Organization Service Incoming Correlation id: {}" ,UserContextHolder.getContext().getCorrelationId());
-        filterChain.doFilter(httpServletRequest, servletResponse);
-    }
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {}
-
-    @Override
-    public void destroy() {}
+	@Override
+	public void destroy() {
+	}
 }
