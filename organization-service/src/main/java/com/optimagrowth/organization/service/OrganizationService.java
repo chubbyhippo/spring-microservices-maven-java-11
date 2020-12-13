@@ -6,32 +6,54 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.optimagrowth.organization.events.source.SimpleSourceBean;
 import com.optimagrowth.organization.model.Organization;
 import com.optimagrowth.organization.repository.OrganizationRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class OrganizationService {
-	
-    @Autowired
-    private OrganizationRepository repository;
 
-    public Organization findById(String organizationId) {
-    	Optional<Organization> opt = repository.findById(organizationId);
-        return (opt.isPresent()) ? opt.get() : null;
-    }
+	@Autowired
+	private OrganizationRepository repository;
 
-    public Organization create(Organization organization){
-    	organization.setId( UUID.randomUUID().toString());
-        organization = repository.save(organization);
-        return organization;
+	@Autowired
+	SimpleSourceBean simpleSourceBean;
 
-    }
+	public Organization findById(String organizationId) {
+		Optional<Organization> opt = repository.findById(organizationId);
+		simpleSourceBean.publishOrganizationChange("GET", organizationId);
+		return (opt.isPresent()) ? opt.get() : null;
+	}
 
-    public void update(Organization organization){
-    	repository.save(organization);
-    }
+	public Organization create(Organization organization) {
+		organization.setId(UUID.randomUUID().toString());
+		organization = repository.save(organization);
+		simpleSourceBean.publishOrganizationChange("SAVE",
+				organization.getId());
+		return organization;
 
-    public void delete(Organization organization){
-    	repository.deleteById(organization.getId());
-    }
+	}
+
+	public void update(Organization organization) {
+		repository.save(organization);
+		simpleSourceBean.publishOrganizationChange("UPDATE",
+				organization.getId());
+	}
+
+	public void delete(String organizationId) {
+		repository.deleteById(organizationId);
+		simpleSourceBean.publishOrganizationChange("DELETE", organizationId);
+	}
+
+	@SuppressWarnings("unused")
+	private void sleep() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			log.error(e.getMessage());
+		}
+	}
 }
