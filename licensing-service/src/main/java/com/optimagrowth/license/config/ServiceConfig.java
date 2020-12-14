@@ -3,14 +3,23 @@ package com.optimagrowth.license.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Component
-public class ServiceConfig{
+import lombok.Getter;
 
-  @Value("${example.property}")
-  private String exampleProperty;
-  
-  public String getExampleProperty(){
-    return exampleProperty;
-  }
-  
+@Component
+@Getter
+public class ServiceConfig {
+
+	@Value("${example.property}")
+	private String exampleProperty;
+
+	public String getExampleProperty() {
+		return exampleProperty;
+	}
+
+	@Value("${redis.server}")
+	private String redisServer = "";
+
+	@Value("${redis.port}")
+	private String redisPort = "";
+
 }
