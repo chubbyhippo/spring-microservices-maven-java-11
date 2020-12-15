@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.optimagrowth.license.model.License;
 import com.optimagrowth.license.service.LicenseService;
+import com.optimagrowth.license.utils.UserContext;
 import com.optimagrowth.license.utils.UserContextHolder;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,9 @@ public class LicenseController {
 	public ResponseEntity<License> getLicense(
 			@PathVariable("organizationId") String organizationId,
 			@PathVariable("licenseId") String licenseId) {
+		UserContextHolder.getContext();
 		log.debug("LicenseServiceController Correlation id: {}",
-				UserContextHolder.getContext().getCorrelationId());
+				UserContext.getCorrelationId());
 		License license = licenseService.getLicense(licenseId, organizationId,
 				"");
 		license.add(
@@ -84,9 +86,11 @@ public class LicenseController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public List<License> getLicenses(
-			@PathVariable("organizationId") String organizationId) throws TimeoutException {
+			@PathVariable("organizationId") String organizationId)
+			throws TimeoutException {
+		UserContextHolder.getContext();
 		log.debug("LicenseServiceController Correlation id: {}",
-				UserContextHolder.getContext().getCorrelationId());
+				UserContext.getCorrelationId());
 		return licenseService.getLicensesByOrganization(organizationId);
 	}
 
