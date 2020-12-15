@@ -17,6 +17,7 @@ import com.optimagrowth.license.repository.LicenseRepository;
 import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
+import com.optimagrowth.license.utils.UserContext;
 import com.optimagrowth.license.utils.UserContextHolder;
 
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
@@ -160,8 +161,9 @@ public class LicenseService {
 	public List<License> getLicensesByOrganization(String organizationId)
 			throws TimeoutException {
 
+		UserContextHolder.getContext();
 		log.debug("getLicensesByOrganization Correlation id: {}",
-				UserContextHolder.getContext().getCorrelationId());
+				UserContext.getCorrelationId());
 		randomlyRunLong();
 		return licenseRepository.findByOrganizationId(organizationId);
 	}
