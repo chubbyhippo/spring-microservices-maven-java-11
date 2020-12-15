@@ -12,9 +12,8 @@ public class ServiceConfig {
 	@Value("${example.property}")
 	private String exampleProperty;
 
-	public String getExampleProperty() {
-		return exampleProperty;
-	}
+	@Value("${signing.key}")
+	private String jwtSigningKey = "";
 
 	@Value("${redis.server}")
 	private String redisServer = "";
