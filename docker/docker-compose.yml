@@ -102,12 +102,14 @@ services:
   authenticationservice:
     image: ostock/authentication-service:0.0.1-SNAPSHOT
     environment:
-      SPRING_PROFILES_ACTIVE: default
+      SPRING_PROFILES_ACTIVE: dev 
       SPRING_CLOUD_CONFIG_URI: http://configserver:8071
     depends_on:
       database:
         condition: service_healthy
       configserver:
+        condition: service_started
+      eurekaserver:
         condition: service_started
     ports:
     - 8082:8082
@@ -129,6 +131,8 @@ services:
         condition: service_started
       kafkaserver:
         condition: service_started
+      eurekaserver:
+        condition: service_started
     ports:
     - 8080:8080
     networks:
@@ -146,6 +150,8 @@ services:
       authenticationservice:
         condition: service_started
       kafkaserver:
+        condition: service_started
+      eurekaserver:
         condition: service_started
     ports:
     - 8081:8081
