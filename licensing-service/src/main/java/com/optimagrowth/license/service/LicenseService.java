@@ -71,11 +71,6 @@ public class LicenseService {
 		Organization organization = null;
 
 		switch (clientType) {
-		case "feign":
-			System.out.println("I am using the feign client");
-			organization = organizationFeignClient
-					.getOrganization(organizationId);
-			break;
 		case "rest":
 			System.out.println("I am using the rest client");
 			organization = organizationRestClient
