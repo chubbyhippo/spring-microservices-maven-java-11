@@ -9,8 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -20,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import com.optimagrowth.license.events.model.OrganizationChangeModel;
 import com.optimagrowth.license.utils.UserContextInterceptor;
 
 @SpringBootApplication
