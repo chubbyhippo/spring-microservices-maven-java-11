@@ -40,9 +40,6 @@ public class LicenseService {
 	ServiceConfig config;
 
 	@Autowired
-	OrganizationFeignClient organizationFeignClient;
-
-	@Autowired
 	OrganizationRestTemplateClient organizationRestClient;
 
 	@Autowired
