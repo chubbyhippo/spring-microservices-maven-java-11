@@ -30,17 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 @EnableDiscoveryClient
 @EnableEurekaClient
 @EnableResourceServer
-@Slf4j
 public class LicenseServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LicenseServiceApplication.class, args);
-	}
-
-	@StreamListener(Sink.INPUT)
-	public void loggerSink(OrganizationChangeModel orgChange) {
-		log.debug("Received an {} event for organization id {}",
-				orgChange.getAction(), orgChange.getOrganizationId());
 	}
 
 	@Bean
