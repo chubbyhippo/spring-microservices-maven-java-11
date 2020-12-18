@@ -23,8 +23,6 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import com.optimagrowth.license.events.model.OrganizationChangeModel;
 import com.optimagrowth.license.utils.UserContextInterceptor;
 
-import lombok.extern.slf4j.Slf4j;
-
 @SpringBootApplication
 @RefreshScope
 @EnableDiscoveryClient
