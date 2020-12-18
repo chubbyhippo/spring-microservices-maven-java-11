@@ -6,8 +6,10 @@ spring:
     profiles:
       active: dev
     cloud:
-        config:
-            uri: http://localhost:8071
+      config:
+        uri: http://localhost:8071
+
+    
 security:
   oauth2:
     resource:
@@ -25,7 +27,7 @@ management:
     web:
       exposure:
         include: "*"
-
+    
 resilience4j.circuitbreaker:
   instances:
     licenseService:
