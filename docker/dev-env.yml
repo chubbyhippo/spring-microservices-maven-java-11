@@ -56,10 +56,6 @@ services:
     ports:
     - 9300:9300
     - 9200:9200
-    networks:
-      backend:
-        aliases:
-        - elasticsearch
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.1
     environment:
@@ -84,3 +80,6 @@ services:
     - ES_HOSTS=elasticsearch:9300
     ports:
     - 9411:9411
+volumes:
+  esdata1:
+    driver: local
