@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import brave.Tracer;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Configuration
+@Slf4j
 public class ResponseFilter {
-
-	final Logger logger = LoggerFactory.getLogger(ResponseFilter.class);
 
 	@Autowired
 	Tracer tracer;
@@ -27,12 +27,12 @@ public class ResponseFilter {
 			return chain.filter(exchange).then(Mono.fromRunnable(() -> {
 				String traceId = tracer.currentSpan().context()
 						.traceIdString();
-				logger.debug(
+				log.debug(
 						"Adding the correlation id to the outbound headers. {}",
 						traceId);
 				exchange.getResponse().getHeaders()
 						.add(FilterUtils.CORRELATION_ID, traceId);
-				logger.debug("Completing outgoing request for {}.",
+				log.debug("Completing outgoing request for {}.",
 						exchange.getRequest().getURI());
 			}));
 		};
