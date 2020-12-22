@@ -14,12 +14,11 @@ import com.optimagrowth.organization.repository.OrganizationRepository;
 
 import brave.ScopedSpan;
 import brave.Tracer;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class OrganizationService {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(OrganizationService.class);
 
 	@Autowired
 	private OrganizationRepository repository;
@@ -40,11 +39,10 @@ public class OrganizationService {
 				String message = String.format(
 						"Unable to find an organization with the Organization id %s",
 						organizationId);
-				logger.error(message);
+				log.error(message);
 				throw new IllegalArgumentException(message);
 			}
-			logger.debug(
-					"Retrieving Organization Info: " + opt.get().toString());
+			log.debug("Retrieving Organization Info: " + opt.get().toString());
 		} finally {
 			newSpan.tag("peer.service", "postgres");
 			newSpan.annotate("Client received");
@@ -78,7 +76,7 @@ public class OrganizationService {
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 		}
 	}
 }
