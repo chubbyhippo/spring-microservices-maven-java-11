@@ -102,7 +102,7 @@ services:
   authenticationservice:
     image: ostock/authentication-service:0.0.1-SNAPSHOT
     environment:
-      SPRING_PROFILES_ACTIVE: dev 
+      SPRING_PROFILES_ACTIVE: dev
       SPRING_CLOUD_CONFIG_URI: http://configserver:8071
     depends_on:
       database:
@@ -122,6 +122,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_CLOUD_CONFIG_URI: http://configserver:8071
+      CONFIG_LOGBACK-DESTINATION: logstash:5000
     depends_on:
       database:
         condition: service_healthy
@@ -142,6 +143,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_CLOUD_CONFIG_URI: http://configserver:8071
+      CONFIG_LOGBACK-DESTINATION: logstash:5000
     depends_on:
       database:
         condition: service_healthy
@@ -157,6 +159,67 @@ services:
     - 8081:8081
     networks:
     - backend
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    container_name: elasticsearch
+    environment:
+    - node.name=elasticsearch
+    - discovery.type=single-node
+    - cluster.name=docker-cluster
+    - bootstrap.memory_lock=true
+    - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+    - esdata1:/usr/share/elasticsearch/data
+    ports:
+    - 9300:9300
+    - 9200:9200
+    networks:
+      backend:
+        aliases:
+        - elasticsearch
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9300
+    ports:
+    - 5601:5601
+    networks:
+      backend:
+        aliases:
+        - kibana
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.1
+    container_name: logstash
+    command: logstash -f /etc/logstash/conf.d/logstash.conf
+    volumes:
+    - ./config:/etc/logstash/conf.d
+    ports:
+    - 5000:5000
+    networks:
+      backend:
+        aliases:
+        - logstash
+  zipkin:
+    image: openzipkin/zipkin
+    depends_on:
+    - elasticsearch
+    environment:
+    - STORAGE_TYPE=elasticsearch
+    - ES_HOSTS=elasticsearch:9300
+    ports:
+    - 9411:9411
+    networks:
+      backend:
+        aliases:
+        - zipkin
+volumes:
+  esdata1:
+    driver: local
 networks:
   backend:
     driver: bridge
