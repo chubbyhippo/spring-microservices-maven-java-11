@@ -4,9 +4,11 @@
 		resource="org/springframework/boot/logging/logback/base.xml" />
 	<springProperty scope="context" name="application_name"
 		source="spring.application.name" />
+	<springProperty scope="context" name="destination"
+		source="config.logback-destination" />
 	<appender name="logstash"
 		class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-		<destination>localhost:5000</destination>
+		<destination>${destination}</destination>
 		<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
 	</appender>
 	<root level="INFO">

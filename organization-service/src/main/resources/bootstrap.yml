@@ -6,6 +6,9 @@ spring:
     cloud:
         config: 
             uri: http://localhost:8071
+            
+config:
+  logback-destination: localhost:5000
 
 logging:
   level:
