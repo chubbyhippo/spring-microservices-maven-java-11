@@ -1,7 +1,8 @@
 package com.optimagrowth.license.service.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -11,39 +12,41 @@ import com.optimagrowth.license.model.Organization;
 import com.optimagrowth.license.repository.OrganizationRedisRepository;
 import com.optimagrowth.license.utils.UserContext;
 
-import lombok.extern.slf4j.Slf4j;
+import brave.ScopedSpan;
+import brave.Tracer;
 
 @Component
-@Slf4j
 public class OrganizationRestTemplateClient {
 	@Autowired
 	RestTemplate restTemplate;
 
 	@Autowired
-	OrganizationRedisRepository redisRepository;
+	Tracer tracer;
 
 	@Autowired
-	private Environment env;
+	OrganizationRedisRepository redisRepository;
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(OrganizationRestTemplateClient.class);
 
 	public Organization getOrganization(String organizationId) {
-		log.debug("In Licensing Service.getOrganization: {}",
+		logger.debug("In Licensing Service.getOrganization: {}",
 				UserContext.getCorrelationId());
 
 		Organization organization = checkRedisCache(organizationId);
 
 		if (organization != null) {
-			log.debug(
+			logger.debug(
 					"I have successfully retrieved an organization {} from the redis cache: {}",
 					organizationId, organization);
 			return organization;
 		}
 
-		log.debug("Unable to locate organization from the redis cache: {}.",
+		logger.debug("Unable to locate organization from the redis cache: {}.",
 				organizationId);
 
 		ResponseEntity<Organization> restExchange = restTemplate.exchange(
-				env.getProperty("gateway.url")
-						+ "organization/v1/organization/{organizationId}",
+				"http://gateway:8072/organization/v1/organization/{organizationId}",
 				HttpMethod.GET, null, Organization.class, organizationId);
 
 		/* Save the record from cache */
@@ -56,13 +59,19 @@ public class OrganizationRestTemplateClient {
 	}
 
 	private Organization checkRedisCache(String organizationId) {
+		ScopedSpan newSpan = tracer
+				.startScopedSpan("readLicensingDataFromRedis");
 		try {
 			return redisRepository.findById(organizationId).orElse(null);
 		} catch (Exception ex) {
-			log.error(
+			logger.error(
 					"Error encountered while trying to retrieve organization {} check Redis Cache.  Exception {}",
 					organizationId, ex);
 			return null;
+		} finally {
+			newSpan.tag("peer.service", "redis");
+			newSpan.annotate("Client received");
+			newSpan.finish();
 		}
 	}
 
@@ -70,7 +79,8 @@ public class OrganizationRestTemplateClient {
 		try {
 			redisRepository.save(organization);
 		} catch (Exception ex) {
-			log.error("Unable to cache organization {} in Redis. Exception {}",
+			logger.error(
+					"Unable to cache organization {} in Redis. Exception {}",
 					organization.getId(), ex);
 		}
 	}
