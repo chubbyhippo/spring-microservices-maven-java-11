@@ -14,8 +14,10 @@ import com.optimagrowth.license.utils.UserContext;
 
 import brave.ScopedSpan;
 import brave.Tracer;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class OrganizationRestTemplateClient {
 	@Autowired
 	RestTemplate restTemplate;
@@ -26,23 +28,20 @@ public class OrganizationRestTemplateClient {
 	@Autowired
 	OrganizationRedisRepository redisRepository;
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(OrganizationRestTemplateClient.class);
-
 	public Organization getOrganization(String organizationId) {
-		logger.debug("In Licensing Service.getOrganization: {}",
+		log.debug("In Licensing Service.getOrganization: {}",
 				UserContext.getCorrelationId());
 
 		Organization organization = checkRedisCache(organizationId);
 
 		if (organization != null) {
-			logger.debug(
+			log.debug(
 					"I have successfully retrieved an organization {} from the redis cache: {}",
 					organizationId, organization);
 			return organization;
 		}
 
-		logger.debug("Unable to locate organization from the redis cache: {}.",
+		log.debug("Unable to locate organization from the redis cache: {}.",
 				organizationId);
 
 		ResponseEntity<Organization> restExchange = restTemplate.exchange(
@@ -64,7 +63,7 @@ public class OrganizationRestTemplateClient {
 		try {
 			return redisRepository.findById(organizationId).orElse(null);
 		} catch (Exception ex) {
-			logger.error(
+			log.error(
 					"Error encountered while trying to retrieve organization {} check Redis Cache.  Exception {}",
 					organizationId, ex);
 			return null;
@@ -79,8 +78,7 @@ public class OrganizationRestTemplateClient {
 		try {
 			redisRepository.save(organization);
 		} catch (Exception ex) {
-			logger.error(
-					"Unable to cache organization {} in Redis. Exception {}",
+			log.error("Unable to cache organization {} in Redis. Exception {}",
 					organization.getId(), ex);
 		}
 	}
