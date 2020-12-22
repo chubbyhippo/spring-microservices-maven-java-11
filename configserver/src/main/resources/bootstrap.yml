@@ -11,7 +11,7 @@ spring:
         git:
           uri: https://github.com/chubbyhippo/spring-microservices-maven-java-11
           search-paths:          - config
-          clone-on-start: true
+#          clone-on-start: true
           default-label: main
 
 server:  port: 8071
